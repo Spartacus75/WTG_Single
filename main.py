@@ -1,42 +1,82 @@
 import pygame
 import sys
-from dessin.eolienne_components.tour import dessiner_section_tour
-from dessin.trucks.truck import dessiner_camion
+import time
 
-
-# Initialisation de Pygame
+# Initialiser Pygame
 pygame.init()
 
-# Définition des dimensions de l'écran
-size = width, height = 800, 600
-screen = pygame.display.set_mode(size)
+# Configurer la fenêtre
+taille_ecran = largeur, hauteur = 800, 600
+ecran = pygame.display.set_mode(taille_ecran)
+pygame.display.set_caption("Simulation de Transport")
 
 # Couleurs
-black = (0, 0, 0)
+NOIR = (0, 0, 0)
+BLEU = (0, 0, 255)
+BLANC = (255, 255, 255)
 
-# Boucle principale
-running = True
-while running:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			running = False
+# Initialiser le module de police et créer un objet Font
+pygame.font.init()
+font = pygame.font.SysFont('arial', 20)
 
-	# Remplit l'écran avec la couleur de fond
-	screen.fill(black)
+# Positions de départ et d'arrivée
+point_A = 10
+point_B = largeur - 50
+
+# Détails du camion
+position_camion = [50,250]  # Convertit le tuple en liste pour permettre la modification
+taille_camion = (40, 20)
+
+# Vitesse de déplacement du camion (pixels par frame)
+vitesse = 10
+
+# Direction initiale
+direction = "to_B"
+
+# Boucle de jeu
+en_cours = True
+while en_cours:
+    for evenement in pygame.event.get():
+        if evenement.type == pygame.QUIT:
+            en_cours = False
+
+    # Effacer l'écran
+    ecran.fill(BLANC)
+
+    # Dessiner le camion
+    pygame.draw.rect(ecran, BLEU, (*position_camion, *taille_camion))
+
+    # Mettre à jour la position du camion
+    if direction == "to_B":
+        position_camion[0] += vitesse
+        if position_camion[0] >= point_B:
+            direction = "stop_B"
+    elif direction == "to_A":
+        position_camion[0] -= vitesse
+        if position_camion[0] <= point_A:
+            direction = "stop_A"
+
+    # Gestion des arrêts
+    if direction == "stop_B":
+        pygame.display.flip()  # Met à jour l'affichage avant de s'arrêter
+        time.sleep(1)  # S'arrête pendant 1 seconde
+        direction = "to_A"
+    elif direction == "stop_A":
+        pygame.display.flip()  # Met à jour l'affichage avant de s'arrêter
+        time.sleep(1)  # S'arrête pendant 1 seconde
+        direction = "to_B"
 
 
-	# Dessine les quatre sections de tour
-	dessiner_section_tour(screen, 100, 100, 75, 25)  # Exemple de dimensions et position
-	dessiner_section_tour(screen, 200, 100, 75, 25)  # Modifiez ces valeurs selon vos besoins
-	dessiner_section_tour(screen, 300, 100, 75, 25)
-	dessiner_section_tour(screen, 400, 100, 75, 25)
-
-	#Dessin camion
-	dessiner_camion(screen, 500, 100, 50, 12)
-	dessiner_camion(screen, 700, 100, 50, 12)
+    # Afficher la vitesse
+    texte_vitesse = font.render(f'Vitesse: {vitesse} pixels/frame', True, NOIR)
+    ecran.blit(texte_vitesse, (10, 10))
 
 
-	# Met à jour l'affichage
-	pygame.display.flip()
+    # Actualiser l'affichage
+    pygame.display.flip()
+
+    # Limiter les frames par seconde (FPS)
+    pygame.time.Clock().tick(60)
 
 pygame.quit()
+sys.exit()
