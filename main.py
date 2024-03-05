@@ -6,7 +6,7 @@ import time
 pygame.init()
 
 # Configurer la fenêtre
-taille_ecran = largeur, hauteur = 1600, 1200
+taille_ecran = largeur, hauteur = 800, 600
 ecran = pygame.display.set_mode(taille_ecran)
 pygame.display.set_caption("Simulation de Transport")
 
@@ -20,23 +20,32 @@ pygame.font.init()
 font = pygame.font.SysFont('arial', 20)
 
 # Positions de départ et d'arrivée
-point_A = 10
+point_A = 0
 point_B = largeur - 50
 
 
 
+
+# Charger l'image du camion
+image_camion_originale = pygame.image.load('images/truck_1.png')
+# Supposons que vous voulez redimensionner l'image du camion
+nouvelle_largeur = 12  # Nouvelle largeur souhaitée en pixels
+nouvelle_hauteur = 3  # Nouvelle hauteur souhaitée en pixels
+# Redimensionner l'image du camion
+image_camion = pygame.transform.scale(image_camion_originale, (nouvelle_largeur, nouvelle_hauteur))
 # Détails du camion
-image_camion = pygame.image.load('images/truck_1.png')
+#image_camion = pygame.image.load('images/truck_1.png')
 taille_camion = image_camion.get_size()
-position_camion = [50,250]
+position_camion = [0, 250]
+
+
 
 # Variable pour le suivi du drag
 drag_en_cours = False
 position_prec = None
 
-
 # Vitesse de déplacement du camion (pixels par frame)
-vitesse = 10
+vitesse = 15
 
 # Direction initiale
 direction = "to_B"
@@ -57,18 +66,11 @@ while en_cours:
             deplacement_x, deplacement_y = position_actuelle[0] - position_prec[0], position_actuelle[1] - position_prec[1]
             position_camion[0] += deplacement_x
             position_camion[1] += deplacement_y
-            # Mettez à jour position_prec pour le prochain événement MOUSEMOTION
             position_prec = position_actuelle
-
 
     # Effacer l'écran
     ecran.fill(BLANC)
     ecran.blit(image_camion, position_camion)
-
-    # Dessiner le camion
-    #pygame.draw.rect(ecran, BLEU, (*position_camion, *taille_camion))
-
-
 
     # Mettre à jour la position du camion
     if direction == "to_B":
@@ -92,11 +94,11 @@ while en_cours:
         direction = "to_B"
         image_camion = pygame.transform.flip(image_camion, True, False)
 
-
-    # Afficher la vitesse
+    # Afficher la vitesse et les coordonnées du camion
     texte_vitesse = font.render(f'Vitesse: {vitesse} pixels/frame', True, NOIR)
     ecran.blit(texte_vitesse, (10, 10))
-
+    texte_coordonnees = font.render(f'Coordonnées: X={position_camion[0]}, Y={position_camion[1]}', True, NOIR)
+    ecran.blit(texte_coordonnees, (10, 35))
 
     # Actualiser l'affichage
     pygame.display.flip()
