@@ -2,6 +2,7 @@ import pygame
 import sys
 from dessin.trucks.camion import Camion  # Assurez-vous que votre classe Camion est mise à jour pour gérer le déplacement diagonal
 from utils.dashboard import Dashboard
+from utils.routes import Route
 
 # Initialiser Pygame
 pygame.init()
@@ -28,6 +29,8 @@ camion.definir_itineraire(point_depart, point_arrivee)
 # Initialiser le dashboard
 dashboard = Dashboard(font)
 
+# Initialiser la route
+route = Route(point_depart, point_arrivee)
 # Boucle de jeu
 en_cours = True
 while en_cours:
@@ -41,6 +44,9 @@ while en_cours:
     # Mise à jour et dessin du camion
     camion.mise_a_jour()
     camion.dessiner(ecran)
+
+    # Dessiner la route
+    route.dessiner(ecran)
 
     # Afficher la vitesse et les coordonnées du camion
     dashboard.afficher_vitesse_et_coordonnees(ecran, camion.vitesse, camion.position)
