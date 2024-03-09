@@ -18,9 +18,10 @@ class Camion:
         self.point_arrivee = None
         self.destination_actuelle = None
 
-    def dessiner(self, ecran):
+    def dessiner(self, ecran, offset_x=0, offset_y=0):
         # Affiche le camion à sa position actuelle sur l'écran
-        ecran.blit(self.image, self.position)
+        position_avec_offset = (self.position[0] + offset_x, self.position[1] + offset_y)
+        ecran.blit(self.image, position_avec_offset)
 
     def definir_itineraire(self, depart, arrivee):
         # Définit les points de départ et d'arrivée et la destination actuelle

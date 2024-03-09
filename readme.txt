@@ -1,5 +1,5 @@
 *** UPGRADE A FAIRE DANS L'ORDRE
-changer l'image du camion
+IMPORTANT POUR INTEGRER L'OFFSET, IL FAUT QUE LES CLASSES CAMION ET AUTRE TIENNE COMPTE DE L OFFSET
 taille reel
 zoom in/out in real time
 direction x, y quelconque

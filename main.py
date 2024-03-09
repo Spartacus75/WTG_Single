@@ -3,9 +3,13 @@ import sys
 from dessin.trucks.camion import Camion  # Assurez-vous que votre classe Camion est mise à jour pour gérer le déplacement diagonal
 from utils.dashboard import Dashboard
 from utils.routes import Route
+from utils.camera import Camera
 
 # Initialiser Pygame
 pygame.init()
+
+# Gestion
+camera = Camera()
 
 # Configurer la fenêtre
 taille_ecran = largeur, hauteur = 800, 600
@@ -37,16 +41,25 @@ while en_cours:
     for evenement in pygame.event.get():
         if evenement.type == pygame.QUIT:
             en_cours = False
+        # Dans votre boucle d'événements
+        if evenement.type == pygame.MOUSEBUTTONDOWN and evenement.button == 1:
+            camera.start_drag(pygame.mouse.get_pos())
+        elif evenement.type == pygame.MOUSEBUTTONUP and evenement.button == 1:
+            camera.stop_drag()
+        elif evenement.type == pygame.MOUSEMOTION:
+            camera.update_drag(pygame.mouse.get_pos())
+
+
 
     # Effacer l'écran
     ecran.fill((255, 255, 255))
 
     # Mise à jour et dessin du camion
     camion.mise_a_jour()
-    camion.dessiner(ecran)
+    camion.dessiner(ecran, camera.offset_x, camera.offset_y)
 
     # Dessiner la route
-    route.dessiner(ecran)
+    route.dessiner(ecran, camera.offset_x, camera.offset_y)
 
     # Afficher la vitesse et les coordonnées du camion
     dashboard.afficher_vitesse_et_coordonnees(ecran, camion.vitesse, camion.position)
